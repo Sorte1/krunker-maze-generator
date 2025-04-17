@@ -488,6 +488,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f5d4a7da358eff58addd2877a45865158f0d78c911d43a5784ceb7bbf52833b0"
 
 [[package]]
+name = "krunker-maze-generator"
+version = "0.1.0"
+dependencies = [
+ "clap",
+ "image",
+ "rand 0.9.1",
+ "serde_json",
+]
+
+[[package]]
 name = "lebe"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -532,16 +542,6 @@ checksum = "8ea1f30cedd69f0a2954655f7188c6a834246d2bcf1e315e2ac40c4b24dc9519"
 dependencies = [
  "cfg-if",
  "rayon",
-]
-
-[[package]]
-name = "maze-generator"
-version = "0.1.0"
-dependencies = [
- "clap",
- "image",
- "rand 0.9.1",
- "serde_json",
 ]
 
 [[package]]
