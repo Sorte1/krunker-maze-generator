@@ -17,8 +17,8 @@ A simple command-line tool written in Rust to generate, solve, and export mazes.
 2. Clone this repository:
 
    ```sh
-   git clone https://github.com/yourusername/maze-generator.git
-   cd maze-generator
+   git clone https://github.com/yourusername/krunker-maze-generator.git
+   cd krunker-maze-generator
    ```
 
 3. Build the project in release mode:
@@ -27,13 +27,13 @@ A simple command-line tool written in Rust to generate, solve, and export mazes.
    cargo build --release
    ```
 
-4. The executable will be in `target/release/maze-generator`.
+4. The executable will be in `target/release/krunker-maze-generator`.
 
 ## Usage
 
 ```sh
 USAGE:
-    maze-generator [OPTIONS]
+    krunker-maze-generator [OPTIONS]
 
 OPTIONS:
     -w, --width <width>             Maze width in cells [default: 100]
@@ -52,19 +52,19 @@ OPTIONS:
 - Generate a default `100×100` maze and export both PNG and JSON:
 
   ```sh
-  maze-generator
+  krunker-maze-generator
   ```
 
 - Generate a `50×30` maze, small cells, thick walls:
 
   ```sh
-  maze-generator -w 50 -h 30 -s 20 -t 8 -i output.png -m walls.json
+  krunker-maze-generator -w 50 -h 30 -s 20 -t 8 -i output.png -m walls.json
   ```
 
 - Generate only the PNG (skip JSON):
 
   ```sh
-  maze-generator --no-map -i maze.png
+  krunker-maze-generator --no-map -i maze.png
   ```
 
 ## JSON Map Format
