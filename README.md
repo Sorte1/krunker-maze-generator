@@ -73,14 +73,7 @@ OPTIONS:
 
    ```toml
    [dependencies]
-   krunker-maze-generator = { git = "https://github.com/Sorte1/krunker-maze-generator", tag = "v0.2.0" }
-   ```
-
-   Or, if you published to crates.io:
-
-   ```toml
-   [dependencies]
-   krunker-maze-generator = "0.2.0"
+   krunker-maze-generator = "0.2.1"
    ```
 
 2. In your code, import and use the `Maze` API:
