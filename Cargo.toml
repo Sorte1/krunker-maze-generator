@@ -16,6 +16,10 @@ categories  = ["game-development", "command-line-utilities"]
 name = "krunker-maze-generator"
 path = "src/main.rs"
 
+[lib]
+name = "krunker_maze_generator"
+path = "src/lib.rs"
+
 include = ["src/**", "Cargo.toml", "README.md", "LICENSE*"]
 
 [dependencies]
