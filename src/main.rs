@@ -1,5 +1,5 @@
 use clap::Parser;
-use krunker_maze_generator::{Maze};
+use krunker_maze_generator::Maze;
 use std::{error::Error, fs::File, io::Write, path::PathBuf};
 
 #[derive(Parser, Debug)]

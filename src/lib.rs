@@ -19,13 +19,18 @@ pub struct Maze {
 impl Maze {
     pub fn new(width: usize, height: usize) -> Self {
         let vert_walls = vec![vec![true; width + 1]; height];
-        let hor_walls  = vec![vec![true; width]; height + 1];
-        Maze { width, height, vert_walls, hor_walls }
+        let hor_walls = vec![vec![true; width]; height + 1];
+        Maze {
+            width,
+            height,
+            vert_walls,
+            hor_walls,
+        }
     }
 
     pub fn generate(&mut self) {
         let mut visited = vec![vec![false; self.width]; self.height];
-        let mut stack   = Vec::new();
+        let mut stack = Vec::new();
         visited[0][0] = true;
         stack.push((0, 0, 0));
 
@@ -47,10 +52,10 @@ impl Maze {
                     if !visited[ny][nx] {
                         match dir {
                             'R' => self.vert_walls[y][x + 1] = false,
-                            'L' => self.vert_walls[y][x]     = false,
-                            'D' => self.hor_walls[y + 1][x]  = false,
-                            'U' => self.hor_walls[y][x]      = false,
-                            _   => {}
+                            'L' => self.vert_walls[y][x] = false,
+                            'D' => self.hor_walls[y + 1][x] = false,
+                            'U' => self.hor_walls[y][x] = false,
+                            _ => {}
                         }
                         stack.push((x, y, i + 1));
                         visited[ny][nx] = true;
@@ -66,7 +71,7 @@ impl Maze {
     pub fn solve(&self) -> Vec<(usize, usize)> {
         let total = self.width * self.height;
         let start = 0;
-        let goal  = total - 1;
+        let goal = total - 1;
 
         let mut g_score = vec![usize::MAX; total];
         let mut came_from = HashMap::new();
@@ -74,10 +79,10 @@ impl Maze {
 
         // Heuristic: Manhattan to goal
         let h = |idx: usize| {
-            let x = (idx % self.width)  as isize;
-            let y = (idx / self.width)  as isize;
-            let gx = (self.width - 1)   as isize;
-            let gy = (self.height - 1)  as isize;
+            let x = (idx % self.width) as isize;
+            let y = (idx / self.width) as isize;
+            let gx = (self.width - 1) as isize;
+            let gy = (self.height - 1) as isize;
             ((gx - x).abs() + (gy - y).abs()) as usize
         };
 
@@ -85,19 +90,31 @@ impl Maze {
         open.push((Reverse(h(start)), start));
 
         while let Some((_, current)) = open.pop() {
-            if current == goal { break }
+            if current == goal {
+                break;
+            }
             let cx = current % self.width;
             let cy = current / self.width;
 
             let neighbors = [
-                (cx.wrapping_sub(1), cy,        cx > 0                    && !self.vert_walls[cy][cx]),
-                (cx + 1,         cy,        cx + 1 < self.width && !self.vert_walls[cy][cx + 1]),
-                (cx,             cy.wrapping_sub(1), cy > 0              && !self.hor_walls[cy][cx]),
-                (cx,             cy + 1,        cy + 1 < self.height && !self.hor_walls[cy + 1][cx]),
+                (cx.wrapping_sub(1), cy, cx > 0 && !self.vert_walls[cy][cx]),
+                (
+                    cx + 1,
+                    cy,
+                    cx + 1 < self.width && !self.vert_walls[cy][cx + 1],
+                ),
+                (cx, cy.wrapping_sub(1), cy > 0 && !self.hor_walls[cy][cx]),
+                (
+                    cx,
+                    cy + 1,
+                    cy + 1 < self.height && !self.hor_walls[cy + 1][cx],
+                ),
             ];
 
             for &(nx, ny, ok) in &neighbors {
-                if !ok || nx >= self.width || ny >= self.height { continue }
+                if !ok || nx >= self.width || ny >= self.height {
+                    continue;
+                }
                 let neighbor = ny * self.width + nx;
                 let tentative = g_score[current] + 1;
                 if tentative < g_score[neighbor] {
@@ -110,7 +127,7 @@ impl Maze {
 
         // Reconstruct path
         let mut path = Vec::new();
-        let mut cur  = goal;
+        let mut cur = goal;
         while let Some(&p) = came_from.get(&cur) {
             path.push((cur % self.width, cur / self.width));
             cur = p;
@@ -128,8 +145,8 @@ impl Maze {
 
         // Colors
         let white = Rgb([255, 255, 255]);
-        let black = Rgb([0,   0,   0  ]);
-        let red   = Rgb([255,   0,   0]);
+        let black = Rgb([0, 0, 0]);
+        let red = Rgb([255, 0, 0]);
 
         // Fill background
         for x in 0..img_w {
@@ -187,7 +204,7 @@ impl Maze {
                 }
             } else {
                 let y0 = cy1.saturating_sub(thickness / 2);
-                let w  = (cx2 as i32 - cx1 as i32).abs() as u32;
+                let w = (cx2 as i32 - cx1 as i32).abs() as u32;
                 let x_min = cx1.min(cx2);
                 for dy in 0..thickness {
                     for dx in 0..=w {
@@ -237,33 +254,33 @@ impl Maze {
                 }
             }
         }
-        let fw = (self.width  * cell_size) as i32;
+        let fw = (self.width * cell_size) as i32;
         let fd = (self.height * cell_size) as i32;
-        let mut sizes  = vec![fw, 1, fd];
+        let mut sizes = vec![fw, 1, fd];
         let mut objects = vec![json!({ "p":[fw/2, -1, fd/2], "si":0 })];
 
         for (i, seg) in segments.iter().enumerate() {
             let si = i + 1;
             if seg["type"] == "vertical" {
-                let x  = seg["x"].as_i64().unwrap() as i32 * cell_size as i32;
+                let x = seg["x"].as_i64().unwrap() as i32 * cell_size as i32;
                 let y1 = seg["y1"].as_i64().unwrap() as i32 * cell_size as i32;
                 let y2 = seg["y2"].as_i64().unwrap() as i32 * cell_size as i32;
                 let length = y2 - y1;
                 sizes.extend([wall_thick as i32, 20, length]);
                 objects.push(json!({"p":[x,0,(y1+y2)/2],"si":si}));
             } else {
-                let y  = seg["y"].as_i64().unwrap() as i32 * cell_size as i32;
+                let y = seg["y"].as_i64().unwrap() as i32 * cell_size as i32;
                 let x1 = seg["x1"].as_i64().unwrap() as i32 * cell_size as i32;
                 let x2 = seg["x2"].as_i64().unwrap() as i32 * cell_size as i32;
                 let length = x2 - x1;
-                sizes.extend([length,20, wall_thick as i32]);
+                sizes.extend([length, 20, wall_thick as i32]);
                 objects.push(json!({"p":[(x1+x2)/2,0,y],"si":si}));
             }
         }
 
         let half = (cell_size as i32) / 2;
-        let start_spawn = json!([half,0,half,0,0,0]);
-        let end_spawn   = json!([(fw-half),0,(fd-half),0,0,0]);
+        let start_spawn = json!([half, 0, half, 0, 0, 0]);
+        let end_spawn = json!([(fw - half), 0, (fd - half), 0, 0, 0]);
 
         json!({
             "name":    "GeneratedMaze",
